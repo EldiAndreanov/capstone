@@ -1,6 +1,5 @@
 from prettytable import PrettyTable
 
-# Daftar buah sebagai contoh data awal
 mobil_list = [
     {"plat_no":"B 2010 EA","merk": "Avanza", "stock": "tersedia", "harga": 150000},
     {"plat_no":"B 1075 BA","merk": "Xenia", "stock": "tersedia", "harga": 100000},
@@ -32,7 +31,16 @@ def tabel_harga_minimal():
     tabel = PrettyTable()
     tabel.field_names = ["No","Plat nomer", "Merk Mobil", "Ketersediaan", "Harga"] #show data menggunakan prettytable dengan nama kolom tersebut
 
-    harga_maksimal = int(input('Masukan harga maksimal yang ingin ditampilkan: '))
+    while True:
+        try:
+            harga_maksimal = int(input('Masukan harga maksimal yang ingin ditampilkan: '))
+            if harga_maksimal <= 0:
+                print("Harga maksimal harus lebih besar dari 0.\n")
+                continue
+            break
+        except ValueError:
+            print("Input tidak valid. Harap masukkan angka.")
+
 
     for index, mobil in enumerate(mobil_list):
         if mobil ["harga"] <= harga_maksimal:
@@ -63,15 +71,12 @@ def tabel():
 
 def tambah_mobil(plat_no, merk, harga):
     global mobil_list
+
     for mobil in mobil_list:
         if mobil["plat_no"].lower() == plat_no.lower(): #Checker, jika ada nama yang sama maka akan muncul kalimat "sudah ada"
             print(f'\n{plat_no} sudah ada, tolong cek kembali')
             return
     plat_besar = plat_no.upper() #Membuat nama yang dimasukan menjadi kapital
-    
-    while harga<=0 :
-        print(f'\nHarga yang dimasukan tidak valid, harga harus lebih dari 0')
-        harga = int(input('Masukan kembali harga dengan benar: '))
 
     mobil_list.append({"plat_no": plat_besar, "merk": merk.title(), "stock": "tersedia", "harga": harga})
     
@@ -93,12 +98,21 @@ def hapus_mobil(no_plat):
 def pinjam_mobil():
 
     tabel_tersedia()
-    total = 0
+
     mobil_list_sorted = sorted(mobil_list, key=lambda x: x["stock"] == "tidak tersedia")
 
-    # while True :
     merk = input('\nMasukkan merk mobil yang ingin dirental: ')
-    jml_hari = int(input('Masukan jumlah hari anda akan merental mobil: '))
+    
+    while True:
+        try:
+            jml_hari = int(input('Masukan jumlah hari anda akan merental mobil: '))
+            if jml_hari <= 0:
+                print("Jumlah hari harus lebih besar dari 0.")
+                continue
+            break
+        except ValueError:
+            print("Input tidak valid. Harap masukkan angka.")
+    
     for mobil in mobil_list_sorted:
         if mobil['merk'].lower()== merk.lower() :
             if mobil['stock'] == 'tersedia' :
@@ -106,13 +120,12 @@ def pinjam_mobil():
 
                 mobil["stock"] = 'tidak tersedia' #mengubah stock
 
-                print(f"{mobil['merk'].upper()} dengan nopol {mobil['plat_no']} : {jml_hari} x {mobil['harga']} =  {ttl_harga}")
+                print(f"\n{mobil['merk'].upper()} dengan nopol {mobil['plat_no']} : {jml_hari} x {mobil['harga']} =  {ttl_harga}")
 
-                # total += ttl_harga
                 
-                print("\nTotal : ", ttl_harga)
+                print("Total : ", ttl_harga)
 
-                uang_masuk = int(input("Masukan jumlah uang: "))
+                uang_masuk = int(input("\nMasukan jumlah uang: "))
 
                 while uang_masuk < ttl_harga :
                     print('\nKamu tidak dapat melanjutkan proses pembelian, karena:')
@@ -127,9 +140,6 @@ def pinjam_mobil():
                     print("Uang kembalian anda: ", uang_masuk-ttl_harga)    
                 return
             print(f'\nMohon maaf, tidak ada mobil {merk.capitalize()} yang tersedia')
-        
-    # tanya = input('\nApakah ingin rental mobil yang lain?(Y/N) ')
-    # if tanya.upper() == 'N': break
 
 def kembali_mobil(no_plat):
     for mobil in mobil_list :
@@ -172,22 +182,37 @@ def main():
         
         if angka == '1':
             tabel()
+            
         elif angka == '2':
             plat_no = input('\nMasukkan plat nomer mobil: ')
             merk = input('Masukkan merk mobil: ')
-            harga = int(input('Masukkan harga rental: '))
+
+            while True:
+                try:
+                    harga = int(input('Masukkan harga rental: '))
+                    if harga <= 0:
+                        print("Jumlah hari harus lebih besar dari 0.")
+                        continue
+                    break
+                except ValueError:
+                    print("Input tidak valid. Harap masukkan angka.")
+
             tambah_mobil(plat_no, merk, harga)
+
         elif angka == '3':
             tampilkan_tabel()
             plat_no = input('\nMasukkan plat nomor mobil yang ingin dihapus: ')
             hapus_mobil(plat_no)
+
         elif angka == '4':
             rental_mobil()
+
         elif angka == '5':
             x = input('\nApakah kamu yakin untuk keluar dari halaman ini? (Y/N): ')
             if x.upper() == 'Y' :
                 print('\nTerimakasih sudah berkunjung\n')
                 break
+
         else:
             print('\nPilihan tidak ada, mohon coba kembali dengan angka 1-5.')
 
