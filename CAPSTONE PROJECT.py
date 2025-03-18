@@ -124,7 +124,7 @@ def ubah_data_mobil():
     tabel = PrettyTable()
     tabel.field_names = ["No", "Plat nomer", "Merk Mobil", "Ketersediaan", "Harga"]
 
-    no_plat = input('Masukan no plat yang ingin diubah: ')
+    no_plat = input('Masukan no polisi mobil, yang datanya ingin diubah: ')
     found = False
 
     for index, mobil in enumerate(mobil_list):
@@ -243,7 +243,7 @@ def kembali_mobil(no_plat):
                 print('\nMohon maaf, mobil dengan nomor polisi tersebut masih tersedia')
             return
     print('\nMohon maaf, mobil dengan nomor polisi yang anda masukan tidak ada')
-    
+
 def opsi_ketiga():
     while True :
         print('\nMenu')
@@ -271,11 +271,16 @@ def hapus_mobil(no_plat):
     global mobil_list
 
     for mobil in mobil_list:
-        if mobil["plat_no"].lower() == no_plat.lower(): #mencari 'nama' yang sudah diinputkan dalam sebuah perulangan
-            x = input('\nApakah kamu yakin untuk menghapus data?(Y/N) ')
-            if x.upper() == 'Y' :
-                mobil_list.remove(mobil)  # melakukan tindakan penghapusan data/list
-                print(f"\nMobil dengan plat nomer {no_plat.upper()} berhasil dihapus.")
+        if mobil["plat_no"].lower() == no_plat.lower():
+            if mobil["stock"].lower() == 'tersedia':
+                x = input('\nApakah kamu yakin untuk menghapus data?(Y/N) ')
+
+                if x.upper() == 'Y' :
+                    mobil_list.remove(mobil)
+                    print(f"\nMobil dengan plat nomer {no_plat.upper()} berhasil dihapus.")
+                return
+            else :
+                print(f'\nMobil dengan plat no {no_plat.upper()} sedang dipinjam, sehingga data tidak dapat dihapus.')
             return
     print(f"\nMobil dengan plat nomer {no_plat.upper()} tidak ditemukan.")
 
