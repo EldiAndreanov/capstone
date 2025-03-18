@@ -240,8 +240,9 @@ def kembali_mobil(no_plat):
                 print(f'\nMobil {mobil["merk"].upper()} dengan plat nomor {no_plat.upper()} berhasil dikembalikan, Terimakasih')
                 mobil["stock"] = "tersedia"
             else :
-                print(f'\nMohon maaf, mungkin data yang anda masukan salah')
-
+                print('\nMohon maaf, mobil dengan nomor polisi tersebut masih tersedia')
+            return
+    print('\nMohon maaf, mobil dengan nomor polisi yang anda masukan tidak ada')
 def opsi_ketiga():
     while True :
         print('\nMenu')
