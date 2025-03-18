@@ -118,74 +118,76 @@ def opsi_kedua():
         else :
             print('ketikan angka yang sesuai (1/2)')
 
-
 def ubah_data_mobil():
     tampilkan_tabel()
 
     tabel = PrettyTable()
-    tabel.field_names = ["No","Plat nomer", "Merk Mobil", "Ketersediaan", "Harga"] #show data menggunakan prettytable dengan nama kolom tersebut
+    tabel.field_names = ["No", "Plat nomer", "Merk Mobil", "Ketersediaan", "Harga"]
 
     no_plat = input('Masukan no plat yang ingin diubah: ')
     found = False
 
     for index, mobil in enumerate(mobil_list):
-        if mobil ["plat_no"].upper() == no_plat.upper():
-            tabel.add_row([index+1, mobil["plat_no"],mobil["merk"], mobil["stock"], mobil["harga"]]) #perulangan untuk show data pada list, untuk membuat tabel
-            
+        if mobil["plat_no"].upper() == no_plat.upper():
+            tabel.add_row([index + 1, mobil["plat_no"], mobil["merk"], mobil["stock"], mobil["harga"]])
             found = True
-    
-    if found:
-        print('\n',tabel)
 
-        continue_edit = input('apakah kamu yakin ingin melanjutkan proses ubah data? (Y/N): ')
+    if found:
+        print('\n', tabel)
+
+        confirm_edit = input('Apakah kamu yakin ingin melanjutkan proses ubah data? (Y/N): ')
         while True:
-            if continue_edit.lower() == 'y':    
+            if confirm_edit.lower() == 'y':
                 column_table = input('\nMasukan kolom yang ingin diubah: ')
 
-                for mobil in mobil_list :
+                for mobil in mobil_list:
                     if mobil["plat_no"].lower() == no_plat.lower():
-                        if column_table.lower() == 'merk mobil' or column_table.lower() == 'merk':
+                        if column_table.lower() in ['merk mobil', 'merk']:
                             merk = input('Masukan merk mobil yang baru: ')
-                            mobil["merk"] = merk.capitalize()
-
-                        if column_table.lower() == 'ketersediaan':
-                            tersedia = input('Masukan ketersediaan mobil: ')
-
-                            while True:
-                                if tersedia.lower() == 'tersedia' or tersedia.lower() == 'tidak tersedia':
+                            if confirm_action():
+                                mobil["merk"] = merk.capitalize()
+                                print('\nData berhasil di update')
+                        elif column_table.lower() == 'ketersediaan':
+                            tersedia = input('Masukan ketersediaan mobil (tersedia/tidak tersedia): ')
+                            if tersedia.lower() in ['tersedia', 'tidak tersedia']:
+                                if confirm_action():
                                     mobil["stock"] = tersedia.lower()
-                                    break
-                                elif tersedia.lower() == 'tidak':
-                                    mobil['stock'] = 'tidak tersedia'
-                                    break
-                                else :
-                                    print('\nAnda hanya bisa mengubah data dengan value tersedia/tidak')
-                                    tersedia = input('Masukan ketersediaan mobil: ')
-
+                                    print('\nData berhasil di update')
+                            else:
+                                print('\nAnda hanya bisa mengubah data dengan value tersedia/tidak tersedia')
                         elif column_table.lower() == 'harga':
                             try:
                                 harga = int(input('Masukkan harga rental baru: '))
                                 if harga <= 0:
                                     print("Jumlah harga harus lebih besar dari 0.")
-                                    continue
-                                break
+                                else:
+                                    if confirm_action():
+                                        mobil["harga"] = harga
+                                        print('\nData berhasil di update')
                             except ValueError:
                                 print("Input tidak valid. Harap masukkan angka.")
-
-                            mobil["harga"] = harga
-                        else :
+                        else:
                             print(f'\nKolom {column_table} tidak ada dalam tabel ini')
-                        tampilkan_tabel()
-                        return
-            elif continue_edit.lower() == 'n':
+                        break
+                tampilkan_tabel()
+                return
+            elif confirm_edit.lower() == 'n':
                 break
-            else :
+            else:
                 print('\nValue yang kamu masukan tidak dikenali, tolong gunakan Y/N')
-
-                continue_edit = input('\nApakah kamu yakin ingin melanjutkan proses ubah data? (Y/N): ')
-
-    else :
+                confirm_edit = input('\nApakah kamu yakin ingin melanjutkan proses ubah data? (Y/N): ')
+    else:
         print(f'\nMobil dengan no polisi {no_plat.upper()} tidak ditemukan.')
+
+def confirm_action():
+    while True:
+        update = input('\nApakah anda yakin ingin mengubah data? (Y/N): ')
+        if update.lower() == 'y':
+            return True
+        elif update.lower() == 'n':
+            return False
+        else:
+            print('\nValue yang kamu masukan tidak dikenali, tolong gunakan Y/N')
 
 def pinjam_mobil():
     tabel_tersedia()
